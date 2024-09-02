@@ -1,0 +1,73 @@
+from tkinter import *
+root = Tk()
+root.geometry('500x400')
+root.config(bg='palegreen')
+root.resizable(0, 0)
+root.title('Contact Book')
+contactlist = []
+Name = StringVar()
+Number = StringVar()
+Email = StringVar()
+Address = StringVar()
+SearchText = StringVar()
+frame = Frame(root)
+frame.pack(side=RIGHT)
+scroll = Scrollbar(frame, orient=VERTICAL)
+select = Listbox(frame, yscrollcommand=scroll.set, height=12)
+scroll.config(command=select.yview)
+scroll.pack(side=RIGHT, fill=Y)
+select.pack(side=LEFT, fill=BOTH, expand=1)
+def Selected():
+    return int(select.curselection()[0])
+def AddContact():
+    contactlist.append([Name.get(), Number.get(), Email.get(), Address.get()])
+    Select_set()
+def EDIT():
+    contactlist[Selected()] = [Name.get(), Number.get(), Email.get(), Address.get()]
+    Select_set()
+def DELETE():
+    del contactlist[Selected()]
+    Select_set()
+def VIEW():
+    NAME, PHONE, EMAIL, ADDRESS = contactlist[Selected()]
+    Name.set(NAME)
+    Number.set(PHONE)
+    Email.set(EMAIL)
+    Address.set(ADDRESS)
+def EXIT():
+    root.destroy()
+def RESET():
+    Name.set('')
+    Number.set('')
+    Email.set('')
+    Address.set('')
+def Select_set():
+    contactlist.sort()
+    select.delete(0, END)
+    for name, phone, email, address in contactlist:
+        select.insert(END, name)
+def Search():
+    search_term = SearchText.get().lower()
+    select.delete(0, END)
+    for name, _, _, _ in contactlist:
+        if search_term in name.lower():
+            select.insert(END, name)
+Select_set()
+Label(root, text='NAME', font='arial 12 bold', bg='bisque').place(x=30, y=20)
+Entry(root, textvariable=Name).place(x=100, y=20)
+Label(root, text='PHONE NO.', font='arial 12 bold', bg='bisque').place(x=30, y=50)
+Entry(root, textvariable=Number).place(x=150, y=50)
+Label(root, text='EMAIL', font='arial 12 bold', bg='bisque').place(x=30, y=80)
+Entry(root, textvariable=Email).place(x=100, y=80)
+Label(root, text='ADDRESS', font='arial 12 bold', bg='bisque').place(x=30, y=110)
+Entry(root, textvariable=Address).place(x=120, y=110)
+Label(root, text='Search:', font='arial 12 bold', bg='bisque').place(x=30, y=140)
+Entry(root, textvariable=SearchText).place(x=100, y=140)
+Button(root, text="Search", font='arial 12 bold', bg='lightblue', command=Search).place(x=250, y=140)
+Button(root, text=" ADD", font='arial 12 bold', bg='blanched almond', command=AddContact).place(x=50, y=180)
+Button(root, text="EDIT", font='arial 12 bold', bg='blanched almond', command=EDIT).place(x=50, y=220)
+Button(root, text="DELETE", font='arial 12 bold', bg='blanched almond', command=DELETE).place(x=50, y=260)
+Button(root, text="VIEW", font='arial 12 bold', bg='blanched almond', command=VIEW).place(x=50, y=300)
+Button(root, text="EXIT", font='arial 12 bold', bg='light salmon', command=EXIT).place(x=380, y=350)
+Button(root, text="RESET", font='arial 12 bold', bg='blanched almond', command=RESET).place(x=50, y=350)
+root.mainloop()
